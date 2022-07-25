@@ -12,6 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ClearCommand = void 0;
 // imports from discord.ts
 const discord_js_1 = require("discord.js");
+const discordConfig_1 = require("../util/discordConfig");
 class ClearCommand {
     constructor(client) {
         this._client = client;
@@ -27,6 +28,7 @@ class ClearCommand {
         ];
     }
     run(interaction) {
+        var _a, _b;
         return __awaiter(this, void 0, void 0, function* () {
             if (!interaction.isChatInputCommand() || !interaction.isRepliable())
                 return;
@@ -39,6 +41,15 @@ class ClearCommand {
             const amount = args.getNumber('amount');
             if (amount == null)
                 return;
+            const member = (_a = this._client) === null || _a === void 0 ? void 0 : _a.getMember(interaction.user.id);
+            if (member == undefined)
+                return;
+            if (!((_b = this._client) === null || _b === void 0 ? void 0 : _b.hasRole(member, discordConfig_1.DiscordRoles.Administrator))) {
+                return yield interaction.reply({
+                    content: `You dont have permissions.`,
+                    ephemeral: true,
+                });
+            }
             if (amount > 100) {
                 return yield interaction.reply({
                     content: `You cannot delete more than 100 messages at the same time.`,

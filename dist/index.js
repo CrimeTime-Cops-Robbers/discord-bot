@@ -81,6 +81,7 @@ class DiscordClient extends discord_js_1.Client {
     fetchData() {
         var _a, _b, _c;
         return __awaiter(this, void 0, void 0, function* () {
+            this._guild = yield this.guilds.fetch("996703131461242982");
             yield ((_a = this.guild) === null || _a === void 0 ? void 0 : _a.members.fetch()); // <= fetch members
             yield ((_b = this.guild) === null || _b === void 0 ? void 0 : _b.roles.fetch()); // <= fetch roles
             yield ((_c = this.guild) === null || _c === void 0 ? void 0 : _c.channels.fetch()); // fetch channels

@@ -1,11 +1,12 @@
 // imports from discord.ts
-import { CacheType, Collection, Message, CommandInteractionOptionResolver, TextBasedChannelFields, Interaction, ApplicationCommandOptionType, InteractionResponse } from 'discord.js';
+import { CacheType, Collection, Message, CommandInteractionOptionResolver, TextBasedChannelFields, Interaction, ApplicationCommandOptionType, InteractionResponse, GuildMember } from 'discord.js';
 // imports from index.ts
 import { DiscordClient } from '../index'
 // imports from discordCommand.ts
 import { DiscordCommand } from '../interfaces/discordCommand';
 // imports from discordCommandArgument.ts
 import { DiscordCommandArgument } from '../interfaces/discordCommandArgument';
+import { DiscordRoles } from '../util/discordConfig';
 
 export class ClearCommand implements DiscordCommand {
     public name: string | undefined;
@@ -37,6 +38,16 @@ export class ClearCommand implements DiscordCommand {
 
         const amount: number | null = args.getNumber('amount');
         if (amount == null) return;
+
+        const member: GuildMember | undefined = this._client?.getMember(interaction.user.id);
+        if (member == undefined) return;
+
+        if (!this._client?.hasRole(member, DiscordRoles.Administrator)) {
+            return await interaction.reply({
+                content: `You dont have permissions.`,
+                ephemeral: true,
+            });
+        }
 
         if (amount > 100) {
             return await interaction.reply({

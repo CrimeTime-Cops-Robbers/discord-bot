@@ -1,4 +1,6 @@
+// imports from index.js
 import { DiscordClient } from '../index';
+// imports from discordEvent.js
 import { DiscordEvent } from '../interfaces/discordEvent';
 
 export class EventController {

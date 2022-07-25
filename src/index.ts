@@ -66,11 +66,13 @@ export class DiscordClient extends Client {
         await this._eventController.initialize();
 
         this._commandController = new CommandController(this, [
+            //register discord commands...
             new ClearCommand(this),
         ]);
-        this._commandController.initialize();
+        await this._commandController.initialize();
     }
     private async fetchData(): Promise<void> {
+        this._guild = await this.guilds.fetch("996703131461242982"); // <= fetch guild
         await this.guild?.members.fetch(); // <= fetch members
         await this.guild?.roles.fetch(); // <= fetch roles
         await this.guild?.channels.fetch(); // fetch channels

@@ -20,29 +20,35 @@ const discordConfig_1 = require("./util/discordConfig");
 const eventController_1 = require("./controllers/eventController");
 // imports from onMessageEvent.ts
 const onMessageEvent_1 = require("./events/onMessageEvent");
+// imports from commandController.ts
+const commandController_1 = require("./controllers/commandController");
+// imports from clearCommand.ts
+const clearCommand_1 = require("./commands/clearCommand");
+//intents for discord bot
+const discordIntents = [
+    discord_js_1.GatewayIntentBits.Guilds,
+    discord_js_1.GatewayIntentBits.GuildMembers,
+    discord_js_1.GatewayIntentBits.GuildBans,
+    discord_js_1.GatewayIntentBits.GuildEmojisAndStickers,
+    discord_js_1.GatewayIntentBits.GuildIntegrations,
+    discord_js_1.GatewayIntentBits.GuildWebhooks,
+    discord_js_1.GatewayIntentBits.GuildInvites,
+    discord_js_1.GatewayIntentBits.GuildVoiceStates,
+    discord_js_1.GatewayIntentBits.GuildPresences,
+    discord_js_1.GatewayIntentBits.GuildMessages,
+    discord_js_1.GatewayIntentBits.GuildMessageReactions,
+    discord_js_1.GatewayIntentBits.GuildMessageTyping,
+    discord_js_1.GatewayIntentBits.DirectMessages,
+    discord_js_1.GatewayIntentBits.DirectMessageReactions,
+    discord_js_1.GatewayIntentBits.DirectMessageTyping,
+    discord_js_1.GatewayIntentBits.MessageContent,
+    discord_js_1.GatewayIntentBits.GuildScheduledEvents,
+];
 // extension of "Client"
 class DiscordClient extends discord_js_1.Client {
     constructor() {
         super({
-            intents: [
-                discord_js_1.GatewayIntentBits.Guilds,
-                discord_js_1.GatewayIntentBits.GuildMembers,
-                discord_js_1.GatewayIntentBits.GuildBans,
-                discord_js_1.GatewayIntentBits.GuildEmojisAndStickers,
-                discord_js_1.GatewayIntentBits.GuildIntegrations,
-                discord_js_1.GatewayIntentBits.GuildWebhooks,
-                discord_js_1.GatewayIntentBits.GuildInvites,
-                discord_js_1.GatewayIntentBits.GuildVoiceStates,
-                discord_js_1.GatewayIntentBits.GuildPresences,
-                discord_js_1.GatewayIntentBits.GuildMessages,
-                discord_js_1.GatewayIntentBits.GuildMessageReactions,
-                discord_js_1.GatewayIntentBits.GuildMessageTyping,
-                discord_js_1.GatewayIntentBits.DirectMessages,
-                discord_js_1.GatewayIntentBits.DirectMessageReactions,
-                discord_js_1.GatewayIntentBits.DirectMessageTyping,
-                discord_js_1.GatewayIntentBits.MessageContent,
-                discord_js_1.GatewayIntentBits.GuildScheduledEvents,
-            ]
+            intents: discordIntents,
         });
         this._logger = new discordLogger_1.DiscordLogger();
         this._config = new discordConfig_1.DiscordConfig();
@@ -66,6 +72,10 @@ class DiscordClient extends discord_js_1.Client {
                 new onMessageEvent_1.OnMessageEvent(this),
             ]);
             yield this._eventController.initialize();
+            this._commandController = new commandController_1.CommandController(this, [
+                new clearCommand_1.ClearCommand(this),
+            ]);
+            this._commandController.initialize();
         });
     }
     fetchData() {
@@ -84,6 +94,26 @@ class DiscordClient extends discord_js_1.Client {
             yield this.fetchData(); // <= fetch data
             this.logger.info('Bot is loaded successfully.');
         });
+    }
+    getChannel(id) {
+        if (this.guild == undefined)
+            return undefined;
+        return this.channels.cache.find(x => x.id == id);
+        ;
+    }
+    getMember(id) {
+        if (this.guild == undefined)
+            return undefined;
+        return this.guild.members.cache.find(x => x.id == id);
+    }
+    getUser(id) {
+        return this.users.cache.find(x => x.id == id);
+    }
+    hasRole(member, roleId) {
+        return member.roles.cache.some(x => x.id == roleId);
+    }
+    wait(ms) {
+        return new Promise(r => setTimeout(r, ms));
     }
 }
 exports.DiscordClient = DiscordClient;

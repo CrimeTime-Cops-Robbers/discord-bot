@@ -12,6 +12,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.OnMessageEvent = void 0;
 // imports from discordConfig.ts
 const discordConfig_1 = require("../util/discordConfig");
+//blacklisted strings
+const allowedLinks = ['youtube', 'tenor'];
+const linkKeywords = ['.com', '.ru', '.net', '.org', '.info', '.biz', '.io', '.co', 'https://', 'http://'];
 class OnMessageEvent {
     constructor(client) {
         this.name = discordConfig_1.DiscordEvents.messageCreate;
@@ -23,11 +26,22 @@ class OnMessageEvent {
             yield ((_a = this._client) === null || _a === void 0 ? void 0 : _a.on(this.name, (...args) => __awaiter(this, void 0, void 0, function* () { return yield this.run(args); })));
         });
     }
+    checkLink(content) {
+        const isLink = linkKeywords.some(x => content.toLowerCase().includes(x));
+        const isBlacklisted = !allowedLinks.some(x => content.toLowerCase().includes(x));
+        return isLink && isBlacklisted;
+    }
     run(args) {
+        var _a;
         return __awaiter(this, void 0, void 0, function* () {
             if (args == undefined)
                 return;
             const message = args[0];
+            if (message == undefined)
+                return;
+            if (this.checkLink(message.content)) {
+                (_a = this._client) === null || _a === void 0 ? void 0 : _a.logger.info(`Found blacklisted link!`);
+            }
         });
     }
 }

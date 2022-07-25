@@ -101,7 +101,7 @@ var DiscordEvents;
 ;
 class DiscordConfig {
     constructor() {
-        this.token = "OTk3MTk4NDYxOTc4MDM0MjE3.GTJopc.9o5fGFBhbSOeVBzRin36_DxjxtIBMXOwukHJFc";
+        this.token = "OTk3MTk4NDYxOTc4MDM0MjE3.Gr7p3q.GC7zA_AUhOhMBMq6ro6p80CsgsmzzyQzWCQJmw";
         this.guildId = "996703131461242982";
     }
 }

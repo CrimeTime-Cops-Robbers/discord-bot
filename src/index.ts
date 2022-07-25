@@ -6,6 +6,8 @@ import { DiscordLogger } from './util/discordLogger';
 import { DiscordConfig } from './util/discordConfig';
 // imports from eventController.ts
 import { EventController } from './controllers/eventController';
+// imports from onMessageEvent.ts
+import { OnMessageEvent } from './events/onMessageEvent';
 
 // extension of "Client"
 export class DiscordClient extends Client {
@@ -19,8 +21,21 @@ export class DiscordClient extends Client {
             intents: [
                 GatewayIntentBits.Guilds,
                 GatewayIntentBits.GuildMembers,
+                GatewayIntentBits.GuildBans,
+                GatewayIntentBits.GuildEmojisAndStickers,
+                GatewayIntentBits.GuildIntegrations,
+                GatewayIntentBits.GuildWebhooks,
+                GatewayIntentBits.GuildInvites,
+                GatewayIntentBits.GuildVoiceStates,
+                GatewayIntentBits.GuildPresences,
                 GatewayIntentBits.GuildMessages,
-                GatewayIntentBits.DirectMessages
+                GatewayIntentBits.GuildMessageReactions,
+                GatewayIntentBits.GuildMessageTyping,
+                GatewayIntentBits.DirectMessages,
+                GatewayIntentBits.DirectMessageReactions,
+                GatewayIntentBits.DirectMessageTyping,
+                GatewayIntentBits.MessageContent,
+                GatewayIntentBits.GuildScheduledEvents,
             ]
         });
         this.initialize();
@@ -41,6 +56,7 @@ export class DiscordClient extends Client {
 
         this._eventController = new EventController(this, [
             //register discord events...
+            new OnMessageEvent(this),
         ]);
         await this._eventController.initialize();
     }
@@ -57,3 +73,5 @@ export class DiscordClient extends Client {
         this.logger.info('Bot is loaded successfully.');
     }
 }
+
+new DiscordClient();

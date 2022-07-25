@@ -5,4 +5,4 @@ These are the [Naming Conventions](https://github.com/basarat/typescript-book/bl
 
 ## Contributors
 
-- S3ven (S3ven#5239)
+- <a href="https://github.com/S33ven">S33ven</a>

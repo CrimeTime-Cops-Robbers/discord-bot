@@ -10,6 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ClearCommand = void 0;
+// imports from discord.ts
 const discord_js_1 = require("discord.js");
 class ClearCommand {
     constructor(client) {
@@ -27,14 +28,16 @@ class ClearCommand {
     }
     run(interaction) {
         return __awaiter(this, void 0, void 0, function* () {
-            if (!interaction.isChatInputCommand())
+            if (!interaction.isChatInputCommand() || !interaction.isRepliable())
                 return;
             const args = interaction.options;
+            if (args == undefined)
+                return;
             const channel = interaction.channel;
-            const user = interaction.user;
-            const member = interaction.member;
+            if (channel == null)
+                return;
             const amount = args.getNumber('amount');
-            if (!interaction.isRepliable())
+            if (amount == null)
                 return;
             if (amount > 100) {
                 return yield interaction.reply({

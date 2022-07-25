@@ -1,6 +1,10 @@
-import { CacheType, Collection, Message, CommandInteractionOptionResolver, TextBasedChannelFields, GuildMember, User, Interaction, ApplicationCommandOptionType } from 'discord.js';
+// imports from discord.ts
+import { CacheType, Collection, Message, CommandInteractionOptionResolver, TextBasedChannelFields, Interaction, ApplicationCommandOptionType, InteractionResponse } from 'discord.js';
+// imports from index.ts
 import { DiscordClient } from '../index'
+// imports from discordCommand.ts
 import { DiscordCommand } from '../interfaces/discordCommand';
+// imports from discordCommandArgument.ts
 import { DiscordCommandArgument } from '../interfaces/discordCommandArgument';
 
 export class ClearCommand implements DiscordCommand {
@@ -22,15 +26,17 @@ export class ClearCommand implements DiscordCommand {
             }
         ];
     }
-    public async run(interaction: Interaction<CacheType>): Promise<any> {
-        if (!interaction.isChatInputCommand()) return;
-        const args: Omit<CommandInteractionOptionResolver<CacheType>, "getMessage" | "getFocused"> = interaction.options;
-        const channel: TextBasedChannelFields = interaction.channel as TextBasedChannelFields;
-        const user: User = interaction.user;
-        const member: GuildMember = interaction.member as GuildMember;
-        const amount: number = args.getNumber('amount') as number;
+    public async run(interaction: Interaction<CacheType>): Promise<void | InteractionResponse<boolean>> {
+        if (!interaction.isChatInputCommand() || !interaction.isRepliable()) return;
 
-        if (!interaction.isRepliable()) return;
+        const args: Omit<CommandInteractionOptionResolver<CacheType>, "getMessage" | "getFocused"> = interaction.options;
+        if (args == undefined) return;
+
+        const channel: TextBasedChannelFields = interaction.channel as TextBasedChannelFields;
+        if (channel == null) return;
+
+        const amount: number | null = args.getNumber('amount');
+        if (amount == null) return;
 
         if (amount > 100) {
             return await interaction.reply({

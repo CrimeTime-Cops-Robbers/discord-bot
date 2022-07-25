@@ -102,4 +102,4 @@ export class DiscordClient extends Client {
         return new Promise(r => setTimeout(r, ms));
     }
 }
-new DiscordClient();
+const discordClient: DiscordClient = new DiscordClient();

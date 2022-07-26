@@ -18,6 +18,10 @@ export enum DiscordCategory {
     Ticket = '997804720808800366',
 };
 
+export enum DiscordGuild {
+    GuildId = '996703131461242982',
+};
+
 export enum DiscordEvents {
     applicationCommandCreate = "applicationCommandCreate",
     applicationCommandDelete = "applicationCommandDelete",

@@ -3,7 +3,7 @@ import { Client, Guild, GatewayIntentBits, Channel, GuildMember, User, } from 'd
 // imports from discordLogger.ts
 import { DiscordLogger } from './util/discordLogger';
 // imports from discordConfig.ts
-import { DiscordConfig } from './util/discordConfig';
+import { DiscordConfig, DiscordGuild } from './util/discordConfig';
 // imports from eventController.ts
 import { EventController } from './controllers/eventController';
 // imports from onMessageEvent.ts
@@ -46,7 +46,6 @@ export class DiscordClient extends Client {
         });
         this.initialize();
     }
-    //get
     public get logger(): DiscordLogger {
         return this._logger;
     }
@@ -56,7 +55,6 @@ export class DiscordClient extends Client {
     public get config(): DiscordConfig {
         return this._config;
     }
-    //methods
     private async ready(): Promise<void> {
 
         this._eventController = new EventController(this, [
@@ -72,7 +70,7 @@ export class DiscordClient extends Client {
         await this._commandController.initialize();
     }
     private async fetchData(): Promise<void> {
-        this._guild = await this.guilds.fetch("996703131461242982"); // <= fetch guild
+        this._guild = await this.guilds.fetch(DiscordGuild.GuildId); // <= fetch guild
         await this.guild?.members.fetch(); // <= fetch members
         await this.guild?.roles.fetch(); // <= fetch roles
         await this.guild?.channels.fetch(); // fetch channels

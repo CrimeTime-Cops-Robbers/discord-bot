@@ -22,6 +22,10 @@ export enum DiscordGuild {
     GuildId = '996703131461242982',
 };
 
+export enum DiscordText {
+    NoPermission = 'You dont have enough permissions.',
+}
+
 export enum DiscordEvents {
     applicationCommandCreate = "applicationCommandCreate",
     applicationCommandDelete = "applicationCommandDelete",

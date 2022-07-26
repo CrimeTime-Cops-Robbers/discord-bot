@@ -12,6 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ClearCommand = void 0;
 // imports from discord.ts
 const discord_js_1 = require("discord.js");
+// imports from discordConfig.ts
 const discordConfig_1 = require("../util/discordConfig");
 class ClearCommand {
     constructor(client) {
@@ -44,9 +45,9 @@ class ClearCommand {
             const member = (_a = this._client) === null || _a === void 0 ? void 0 : _a.getMember(interaction.user.id);
             if (member == undefined)
                 return;
-            if (!((_b = this._client) === null || _b === void 0 ? void 0 : _b.hasRole(member, discordConfig_1.DiscordRoles.Administrator))) {
+            if (!((_b = this._client) === null || _b === void 0 ? void 0 : _b.hasRole(member, [discordConfig_1.DiscordRoles.Administrator]))) {
                 return yield interaction.reply({
-                    content: `You dont have permissions.`,
+                    content: discordConfig_1.DiscordText.NoPermission,
                     ephemeral: true,
                 });
             }

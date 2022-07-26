@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.DiscordConfig = exports.DiscordEvents = exports.DiscordCategory = exports.DiscordChannels = exports.DiscordRoles = void 0;
+exports.DiscordConfig = exports.DiscordEvents = exports.DiscordText = exports.DiscordGuild = exports.DiscordCategory = exports.DiscordChannels = exports.DiscordRoles = void 0;
 var DiscordRoles;
 (function (DiscordRoles) {
     DiscordRoles["Managment"] = "997483551329091684";
@@ -24,6 +24,15 @@ var DiscordCategory;
     DiscordCategory["Ticket"] = "997804720808800366";
 })(DiscordCategory = exports.DiscordCategory || (exports.DiscordCategory = {}));
 ;
+var DiscordGuild;
+(function (DiscordGuild) {
+    DiscordGuild["GuildId"] = "996703131461242982";
+})(DiscordGuild = exports.DiscordGuild || (exports.DiscordGuild = {}));
+;
+var DiscordText;
+(function (DiscordText) {
+    DiscordText["NoPermission"] = "You dont have enough permissions.";
+})(DiscordText = exports.DiscordText || (exports.DiscordText = {}));
 var DiscordEvents;
 (function (DiscordEvents) {
     DiscordEvents["applicationCommandCreate"] = "applicationCommandCreate";

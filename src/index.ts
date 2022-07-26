@@ -12,6 +12,7 @@ import { OnMessageEvent } from './events/onMessageEvent';
 import { CommandController } from './controllers/commandController';
 // imports from clearCommand.ts
 import { ClearCommand } from './commands/clearCommand';
+import { OnReadyEvent } from './events/onReadyEvent';
 //intents for discord bot
 const discordIntents: GatewayIntentBits[] = [
     GatewayIntentBits.Guilds,
@@ -60,6 +61,7 @@ export class DiscordClient extends Client {
         this._eventController = new EventController(this, [
             //register discord events...
             new OnMessageEvent(this),
+            new OnReadyEvent(this),
         ]);
         await this._eventController.initialize();
 
@@ -93,8 +95,8 @@ export class DiscordClient extends Client {
     public getUser(id: string): User | undefined {
         return this.users.cache.find(x => x.id == id);
     }
-    public hasRole(member: GuildMember, roleId: string): boolean {
-        return member.roles.cache.some(x => x.id == roleId);
+    public hasRole(member: GuildMember, roleIds: string[]): boolean {
+        return member.roles.cache.some(x => roleIds.includes(x.id));
     }
     public wait<T>(ms: number): Promise<T> {
         return new Promise(r => setTimeout(r, ms));

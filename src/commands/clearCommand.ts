@@ -6,7 +6,8 @@ import { DiscordClient } from '../index'
 import { DiscordCommand } from '../interfaces/discordCommand';
 // imports from discordCommandArgument.ts
 import { DiscordCommandArgument } from '../interfaces/discordCommandArgument';
-import { DiscordRoles } from '../util/discordConfig';
+// imports from discordConfig.ts
+import { DiscordRoles, DiscordText } from '../util/discordConfig';
 
 export class ClearCommand implements DiscordCommand {
     public name: string | undefined;
@@ -42,9 +43,9 @@ export class ClearCommand implements DiscordCommand {
         const member: GuildMember | undefined = this._client?.getMember(interaction.user.id);
         if (member == undefined) return;
 
-        if (!this._client?.hasRole(member, DiscordRoles.Administrator)) {
+        if (!this._client?.hasRole(member, [DiscordRoles.Administrator])) {
             return await interaction.reply({
-                content: `You dont have permissions.`,
+                content: DiscordText.NoPermission,
                 ephemeral: true,
             });
         }

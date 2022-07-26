@@ -24,6 +24,7 @@ const onMessageEvent_1 = require("./events/onMessageEvent");
 const commandController_1 = require("./controllers/commandController");
 // imports from clearCommand.ts
 const clearCommand_1 = require("./commands/clearCommand");
+const onReadyEvent_1 = require("./events/onReadyEvent");
 //intents for discord bot
 const discordIntents = [
     discord_js_1.GatewayIntentBits.Guilds,
@@ -54,7 +55,6 @@ class DiscordClient extends discord_js_1.Client {
         this._config = new discordConfig_1.DiscordConfig();
         this.initialize();
     }
-    //get
     get logger() {
         return this._logger;
     }
@@ -64,24 +64,25 @@ class DiscordClient extends discord_js_1.Client {
     get config() {
         return this._config;
     }
-    //methods
     ready() {
         return __awaiter(this, void 0, void 0, function* () {
             this._eventController = new eventController_1.EventController(this, [
                 //register discord events...
                 new onMessageEvent_1.OnMessageEvent(this),
+                new onReadyEvent_1.OnReadyEvent(this),
             ]);
             yield this._eventController.initialize();
             this._commandController = new commandController_1.CommandController(this, [
+                //register discord commands...
                 new clearCommand_1.ClearCommand(this),
             ]);
-            this._commandController.initialize();
+            yield this._commandController.initialize();
         });
     }
     fetchData() {
         var _a, _b, _c;
         return __awaiter(this, void 0, void 0, function* () {
-            this._guild = yield this.guilds.fetch("996703131461242982");
+            this._guild = yield this.guilds.fetch(discordConfig_1.DiscordGuild.GuildId); // <= fetch guild
             yield ((_a = this.guild) === null || _a === void 0 ? void 0 : _a.members.fetch()); // <= fetch members
             yield ((_b = this.guild) === null || _b === void 0 ? void 0 : _b.roles.fetch()); // <= fetch roles
             yield ((_c = this.guild) === null || _c === void 0 ? void 0 : _c.channels.fetch()); // fetch channels
@@ -110,12 +111,12 @@ class DiscordClient extends discord_js_1.Client {
     getUser(id) {
         return this.users.cache.find(x => x.id == id);
     }
-    hasRole(member, roleId) {
-        return member.roles.cache.some(x => x.id == roleId);
+    hasRole(member, roleIds) {
+        return member.roles.cache.some(x => roleIds.includes(x.id));
     }
     wait(ms) {
         return new Promise(r => setTimeout(r, ms));
     }
 }
 exports.DiscordClient = DiscordClient;
-new DiscordClient();
+const discordClient = new DiscordClient();

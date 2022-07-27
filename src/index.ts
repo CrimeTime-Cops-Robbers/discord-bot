@@ -1,4 +1,4 @@
-import { Client, Guild, GatewayIntentBits, Channel, GuildMember, User, } from 'discord.js'
+import { Client, Guild, GatewayIntentBits, Channel, GuildMember, User, Snowflake, Role, Collection, NonThreadGuildBasedChannel, } from 'discord.js'
 import { DiscordLogger } from './util/discordLogger';
 import { DiscordConfig, DiscordGuild } from './util/discordConfig';
 import { EventController } from './controllers/eventController';
@@ -34,7 +34,7 @@ export class DiscordClient extends Client {
     private _config: DiscordConfig = new DiscordConfig();
     private _eventController: EventController | undefined;
     private _commandController: CommandController | undefined;
-    private _avatar: string | undefined;
+    private _avatar: string | undefined | null;
 
     constructor() {
         super({
@@ -51,7 +51,7 @@ export class DiscordClient extends Client {
     public get config(): DiscordConfig {
         return this._config;
     }
-    public get avatar(): string | undefined {
+    public get avatar(): string | undefined | null {
         return this._avatar;
     }
     private async ready(): Promise<void> {
@@ -71,15 +71,35 @@ export class DiscordClient extends Client {
         await this._commandController.initialize();
     }
     private async fetchData(): Promise<void> {
+
         this._guild = await this.guilds.fetch(DiscordGuild.GuildId); // <= fetch guild
-        await this.guild?.members.fetch(); // <= fetch members
-        await this.guild?.roles.fetch(); // <= fetch roles
-        await this.guild?.channels.fetch(); // fetch channels
 
-        const avatarUrl: string | null | undefined = await this.user?.avatarURL();
+        if (typeof this._guild == 'undefined') {
+            return this.logger.error('Failed to fetch guild. code (018)');
+        }
 
-        if (typeof avatarUrl == 'string') {
-            this._avatar = avatarUrl;
+        const members: Collection<Snowflake, GuildMember> | undefined = await this.guild?.members.fetch(); // <= fetch members
+
+        if (typeof members == 'undefined') {
+            return this.logger.error('Failed to fetch members. code (019)');
+        }
+
+        const roles: Collection<Snowflake, Role> | undefined = await this.guild?.roles.fetch(); // <= fetch roles
+
+        if (typeof roles == 'undefined') {
+            return this.logger.error('Failed to fetch roles. code (020)');
+        }
+
+        const channels: Collection<Snowflake, NonThreadGuildBasedChannel> | undefined = await this.guild?.channels.fetch(); // fetch channels
+
+        if (typeof channels == 'undefined') {
+            return this.logger.error('Failed to fetch channels. code (021)');
+        }
+
+        this._avatar = this.user?.avatarURL(); // <= fetch avatar
+
+        if (typeof this._avatar != 'string') {
+            return this.logger.error('Failed to fetch avatarUrl. code (022)');
         }
     }
     private async initialize(): Promise<void> {

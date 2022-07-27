@@ -17,16 +17,15 @@ class OnReadyEvent {
         this._client = client;
     }
     register() {
-        var _a;
         return __awaiter(this, void 0, void 0, function* () {
-            yield ((_a = this._client) === null || _a === void 0 ? void 0 : _a.once(this.name, (...args) => __awaiter(this, void 0, void 0, function* () { return yield this.run(); })));
+            yield this.run(); // <= run direct from register because discord once ready is kinda broke...
+            // await this._client?.once(this.name, async (...args: string[]) => await this.run());
         });
     }
     run() {
-        var _a, _b, _c;
+        var _a, _b;
         return __awaiter(this, void 0, void 0, function* () {
-            (_a = this._client) === null || _a === void 0 ? void 0 : _a.logger.debug('Bot calls discord-ready-event...');
-            (_c = (_b = this._client) === null || _b === void 0 ? void 0 : _b.user) === null || _c === void 0 ? void 0 : _c.setPresence({
+            (_b = (_a = this._client) === null || _a === void 0 ? void 0 : _a.user) === null || _b === void 0 ? void 0 : _b.setPresence({
                 activities: [{
                         name: "Hello i am CrimeTime Bot",
                     }]

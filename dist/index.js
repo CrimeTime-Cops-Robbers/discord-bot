@@ -81,12 +81,24 @@ class DiscordClient extends discord_js_1.Client {
         var _a, _b, _c, _d;
         return __awaiter(this, void 0, void 0, function* () {
             this._guild = yield this.guilds.fetch(discordConfig_1.DiscordGuild.GuildId); // <= fetch guild
-            yield ((_a = this.guild) === null || _a === void 0 ? void 0 : _a.members.fetch()); // <= fetch members
-            yield ((_b = this.guild) === null || _b === void 0 ? void 0 : _b.roles.fetch()); // <= fetch roles
-            yield ((_c = this.guild) === null || _c === void 0 ? void 0 : _c.channels.fetch()); // fetch channels
-            const avatarUrl = yield ((_d = this.user) === null || _d === void 0 ? void 0 : _d.avatarURL());
-            if (typeof avatarUrl == 'string') {
-                this._avatar = avatarUrl;
+            if (typeof this._guild == 'undefined') {
+                return this.logger.error('Failed to fetch guild. code (018)');
+            }
+            const members = yield ((_a = this.guild) === null || _a === void 0 ? void 0 : _a.members.fetch()); // <= fetch members
+            if (typeof members == 'undefined') {
+                return this.logger.error('Failed to fetch members. code (019)');
+            }
+            const roles = yield ((_b = this.guild) === null || _b === void 0 ? void 0 : _b.roles.fetch()); // <= fetch roles
+            if (typeof roles == 'undefined') {
+                return this.logger.error('Failed to fetch roles. code (020)');
+            }
+            const channels = yield ((_c = this.guild) === null || _c === void 0 ? void 0 : _c.channels.fetch()); // fetch channels
+            if (typeof channels == 'undefined') {
+                return this.logger.error('Failed to fetch channels. code (021)');
+            }
+            this._avatar = (_d = this.user) === null || _d === void 0 ? void 0 : _d.avatarURL(); // <= fetch avatar
+            if (typeof this._avatar != 'string') {
+                return this.logger.error('Failed to fetch avatarUrl. code (022)');
             }
         });
     }

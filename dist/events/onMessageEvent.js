@@ -10,7 +10,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.OnMessageEvent = void 0;
-// imports from discordConfig.ts
 const discordConfig_1 = require("../util/discordConfig");
 //blacklisted strings
 const allowedLinks = ['youtube', 'tenor'];

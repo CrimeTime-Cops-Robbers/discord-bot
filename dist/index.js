@@ -10,21 +10,15 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.DiscordClient = void 0;
-// imports from discord.js
 const discord_js_1 = require("discord.js");
-// imports from discordLogger.ts
 const discordLogger_1 = require("./util/discordLogger");
-// imports from discordConfig.ts
 const discordConfig_1 = require("./util/discordConfig");
-// imports from eventController.ts
 const eventController_1 = require("./controllers/eventController");
-// imports from onMessageEvent.ts
 const onMessageEvent_1 = require("./events/onMessageEvent");
-// imports from commandController.ts
 const commandController_1 = require("./controllers/commandController");
-// imports from clearCommand.ts
 const clearCommand_1 = require("./commands/clearCommand");
 const onReadyEvent_1 = require("./events/onReadyEvent");
+const announceCommand_1 = require("./commands/announceCommand");
 //intents for discord bot
 const discordIntents = [
     discord_js_1.GatewayIntentBits.Guilds,
@@ -64,6 +58,9 @@ class DiscordClient extends discord_js_1.Client {
     get config() {
         return this._config;
     }
+    get avatar() {
+        return this._avatar;
+    }
     ready() {
         return __awaiter(this, void 0, void 0, function* () {
             this._eventController = new eventController_1.EventController(this, [
@@ -75,17 +72,22 @@ class DiscordClient extends discord_js_1.Client {
             this._commandController = new commandController_1.CommandController(this, [
                 //register discord commands...
                 new clearCommand_1.ClearCommand(this),
+                new announceCommand_1.AnnounceCommand(this),
             ]);
             yield this._commandController.initialize();
         });
     }
     fetchData() {
-        var _a, _b, _c;
+        var _a, _b, _c, _d;
         return __awaiter(this, void 0, void 0, function* () {
             this._guild = yield this.guilds.fetch(discordConfig_1.DiscordGuild.GuildId); // <= fetch guild
             yield ((_a = this.guild) === null || _a === void 0 ? void 0 : _a.members.fetch()); // <= fetch members
             yield ((_b = this.guild) === null || _b === void 0 ? void 0 : _b.roles.fetch()); // <= fetch roles
             yield ((_c = this.guild) === null || _c === void 0 ? void 0 : _c.channels.fetch()); // fetch channels
+            const avatarUrl = yield ((_d = this.user) === null || _d === void 0 ? void 0 : _d.avatarURL());
+            if (typeof avatarUrl == 'string') {
+                this._avatar = avatarUrl;
+            }
         });
     }
     initialize() {

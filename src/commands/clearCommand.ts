@@ -1,12 +1,7 @@
-// imports from discord.ts
 import { CacheType, Collection, Message, CommandInteractionOptionResolver, TextBasedChannelFields, Interaction, ApplicationCommandOptionType, InteractionResponse, GuildMember } from 'discord.js';
-// imports from index.ts
 import { DiscordClient } from '../index'
-// imports from discordCommand.ts
 import { DiscordCommand } from '../interfaces/discordCommand';
-// imports from discordCommandArgument.ts
 import { DiscordCommandArgument } from '../interfaces/discordCommandArgument';
-// imports from discordConfig.ts
 import { DiscordRoles, DiscordText } from '../util/discordConfig';
 
 export class ClearCommand implements DiscordCommand {

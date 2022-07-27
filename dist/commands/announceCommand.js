@@ -9,20 +9,26 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ClearCommand = void 0;
+exports.AnnounceCommand = void 0;
 const discord_js_1 = require("discord.js");
 const discordConfig_1 = require("../util/discordConfig");
-class ClearCommand {
+class AnnounceCommand {
     constructor(client) {
         this._client = client;
-        this.name = "clear";
-        this.description = "Delete multiple messages";
+        this.name = "announce";
+        this.description = "Create an announcement in the current channel.";
         this.options = [
             {
-                name: "amount",
-                description: "Amount",
+                name: "title",
+                description: "Title",
                 required: true,
-                type: discord_js_1.ApplicationCommandOptionType.Number,
+                type: discord_js_1.ApplicationCommandOptionType.String,
+            },
+            {
+                name: "text",
+                description: "Text",
+                required: true,
+                type: discord_js_1.ApplicationCommandOptionType.String,
             }
         ];
     }
@@ -37,11 +43,14 @@ class ClearCommand {
             const channel = interaction.channel;
             if (channel == null)
                 return;
-            const amount = args.getNumber('amount');
-            if (amount == null)
-                return;
             const member = (_a = this._client) === null || _a === void 0 ? void 0 : _a.getMember(interaction.user.id);
             if (member == undefined)
+                return;
+            const title = args.getString('title');
+            if (title == null)
+                return;
+            const text = args.getString('text');
+            if (text == null)
                 return;
             if (!((_b = this._client) === null || _b === void 0 ? void 0 : _b.hasRole(member, [discordConfig_1.DiscordRoles.Administrator]))) {
                 return yield interaction.reply({
@@ -49,32 +58,28 @@ class ClearCommand {
                     ephemeral: true,
                 });
             }
-            if (amount > 100) {
-                return yield interaction.reply({
-                    content: `You cannot delete more than 100 messages at the same time.`,
+            const maxLenght = 1500;
+            if (text.length > maxLenght || text.length > maxLenght) {
+                return interaction.reply({
                     ephemeral: true,
+                    content: `The title and text must not be longer than ${maxLenght} characters.`
                 });
             }
-            const messages = yield channel.messages.fetch({
-                limit: amount,
-            });
-            if (messages == undefined) {
-                return yield interaction.reply({
-                    content: `There are no messages to delete here.`,
-                    ephemeral: true,
-                });
-            }
-            yield channel.bulkDelete(messages).catch(error => {
-                var _a, _b;
-                if (error.code != 10008) {
-                    (_b = (_a = this._client) === null || _a === void 0 ? void 0 : _a.logger) === null || _b === void 0 ? void 0 : _b.error(`Failed to delete the message: ${error.code}`);
-                }
+            yield channel.send({
+                embeds: [
+                    new discord_js_1.EmbedBuilder()
+                        .setColor(0x0099FF)
+                        .setTitle(title)
+                        .setDescription(text)
+                        .setTimestamp()
+                        .setFooter({ text: 'Some footer text here' })
+                ],
             });
             yield interaction.reply({
-                content: `Found ${messages.size} message(s)`,
+                content: "Announcement created successfully.",
                 ephemeral: true,
             });
         });
     }
 }
-exports.ClearCommand = ClearCommand;
+exports.AnnounceCommand = AnnounceCommand;

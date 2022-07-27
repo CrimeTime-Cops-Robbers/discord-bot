@@ -1,18 +1,12 @@
-// imports from discord.js
 import { Client, Guild, GatewayIntentBits, Channel, GuildMember, User, } from 'discord.js'
-// imports from discordLogger.ts
 import { DiscordLogger } from './util/discordLogger';
-// imports from discordConfig.ts
 import { DiscordConfig, DiscordGuild } from './util/discordConfig';
-// imports from eventController.ts
 import { EventController } from './controllers/eventController';
-// imports from onMessageEvent.ts
 import { OnMessageEvent } from './events/onMessageEvent';
-// imports from commandController.ts
 import { CommandController } from './controllers/commandController';
-// imports from clearCommand.ts
 import { ClearCommand } from './commands/clearCommand';
 import { OnReadyEvent } from './events/onReadyEvent';
+import { AnnounceCommand } from './commands/announceCommand';
 //intents for discord bot
 const discordIntents: GatewayIntentBits[] = [
     GatewayIntentBits.Guilds,
@@ -40,6 +34,7 @@ export class DiscordClient extends Client {
     private _config: DiscordConfig = new DiscordConfig();
     private _eventController: EventController | undefined;
     private _commandController: CommandController | undefined;
+    private _avatar: string | undefined;
 
     constructor() {
         super({
@@ -56,6 +51,9 @@ export class DiscordClient extends Client {
     public get config(): DiscordConfig {
         return this._config;
     }
+    public get avatar(): string | undefined {
+        return this._avatar;
+    }
     private async ready(): Promise<void> {
 
         this._eventController = new EventController(this, [
@@ -68,6 +66,7 @@ export class DiscordClient extends Client {
         this._commandController = new CommandController(this, [
             //register discord commands...
             new ClearCommand(this),
+            new AnnounceCommand(this),
         ]);
         await this._commandController.initialize();
     }
@@ -76,6 +75,12 @@ export class DiscordClient extends Client {
         await this.guild?.members.fetch(); // <= fetch members
         await this.guild?.roles.fetch(); // <= fetch roles
         await this.guild?.channels.fetch(); // fetch channels
+
+        const avatarUrl: string | null | undefined = await this.user?.avatarURL();
+
+        if (typeof avatarUrl == 'string') {
+            this._avatar = avatarUrl;
+        }
     }
     private async initialize(): Promise<void> {
         this.logger.info('Bot has been startet.');

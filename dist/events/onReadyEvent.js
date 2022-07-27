@@ -10,7 +10,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.OnReadyEvent = void 0;
-// imports from discordConfig.ts
 const discordConfig_1 = require("../util/discordConfig");
 class OnReadyEvent {
     constructor(client) {
@@ -24,10 +23,10 @@ class OnReadyEvent {
         });
     }
     run() {
-        var _a, _b;
+        var _a, _b, _c;
         return __awaiter(this, void 0, void 0, function* () {
-            console.log("ready");
-            (_b = (_a = this._client) === null || _a === void 0 ? void 0 : _a.user) === null || _b === void 0 ? void 0 : _b.setPresence({
+            (_a = this._client) === null || _a === void 0 ? void 0 : _a.logger.debug('Bot calls discord-ready-event...');
+            (_c = (_b = this._client) === null || _b === void 0 ? void 0 : _b.user) === null || _c === void 0 ? void 0 : _c.setPresence({
                 activities: [{
                         name: "Hello i am CrimeTime Bot",
                     }]

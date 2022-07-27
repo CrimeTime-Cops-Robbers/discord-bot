@@ -1,9 +1,5 @@
-// imports from index.ts
-import { ActivityType } from 'discord.js';
 import { DiscordClient } from '../index'
-// imports from discordEvent.ts
 import { DiscordEvent } from '../interfaces/discordEvent'
-// imports from discordConfig.ts
 import { DiscordEvents } from '../util/discordConfig';
 
 export class OnReadyEvent implements DiscordEvent {
@@ -18,7 +14,7 @@ export class OnReadyEvent implements DiscordEvent {
     }
     public async run(): Promise<any> {
 
-        console.log("ready");
+        this._client?.logger.debug('Bot calls discord-ready-event...');
 
         this._client?.user?.setPresence({
             activities: [{

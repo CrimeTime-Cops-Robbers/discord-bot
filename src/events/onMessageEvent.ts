@@ -1,10 +1,6 @@
-// imports from discord.js
 import { Message } from 'discord.js'
-// imports from index.ts
 import { DiscordClient } from '../index'
-// imports from discordEvent.ts
 import { DiscordEvent } from '../interfaces/discordEvent'
-// imports from discordConfig.ts
 import { DiscordEvents } from '../util/discordConfig';
 
 //blacklisted strings

@@ -6,6 +6,9 @@ These are the [Naming Conventions](https://github.com/basarat/typescript-book/bl
 ## Discod JS Version
 > 14.0.3
 
+## Note
+This project has not been completed.
+
 ## Contributors
 
 - <a href="https://github.com/S33ven">S33ven</a>
